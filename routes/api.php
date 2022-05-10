@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\V1\CopyController;
+use App\Http\Controllers\API\V1\GameController;
+use App\Http\Controllers\API\V1\GenreController;
+use App\Http\Controllers\API\V1\PlatformController;
+use App\Http\Controllers\API\V1\StudioController;
+use App\Http\Controllers\API\V1\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+    // Auth
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
