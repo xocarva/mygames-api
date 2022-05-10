@@ -30,7 +30,7 @@ class CopyResource extends JsonResource
             ],
             'links' => [
                 'self'     => route('copies.show', $this->id),
-                'onwer'    => route('users.show', UserResource::make($this->owner())->id),
+                'owner'    => route('users.show', UserResource::make($this->owner())->id),
                 'game'     => route('games.show', GameResource::make($this->game())->id),
                 'platform' => route('platforms.show', PlatformResource::make($this->platform())->id),
             ],

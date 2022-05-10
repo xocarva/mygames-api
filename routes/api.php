@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-    // Auth
+
+
+// Auth
+
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
@@ -29,24 +32,75 @@ Route::controller(AuthController::class)->group(function () {
 
 });
 
-Route::group(['middleware' => 'auth:api'], function(){
+//Public
 
-    // Genres
-    Route::apiResource('/genres', GenreController::class);
+Route::controller(GenreController::class)->group(function () {
+    Route::get('genres', 'index');
+    Route::get('genres/{genre}', 'show');
+});
 
-    // Studios
-    Route::apiResource('/studios', StudioController::class);
+Route::controller(StudioController::class)->group(function () {
+    Route::get('studios', 'index');
+    Route::get('studios/{studio}', 'show');
+});
 
-    // Platforms
-    Route::apiResource('/platforms', PlatformController::class);
+Route::controller(PlatformController::class)->group(function () {
+    Route::get('platforms', 'index');
+    Route::get('platforms/{platform}', 'show')->name('platforms.show');
+});
 
-    // Games
-    Route::apiResource('/games', GameController::class);
+Route::controller(GameController::class)->group(function () {
+    Route::get('games', 'index');
+    Route::get('games/{game}', 'show')->name('games.show');
+});
 
-    // Users
-    Route::apiResource('/users', UserController::class);
 
-    // Copies
-    Route::apiResource('/copies', CopyController::class);
+// Admin
+
+Route::group([], function(){
+
+    Route::controller(GenreController::class)->group(function () {
+        Route::post('genres', 'store');
+        Route::patch('genres/{genre}', 'update');
+        Route::delete('genres/{genre}', 'destroy');
+    });
+
+    Route::controller(StudioController::class)->group(function () {
+        Route::post('studios', 'store');
+        Route::patch('studios/{studio}', 'update');
+        Route::delete('studios/{studio}', 'destroy');
+    });
+
+    Route::controller(PlatformController::class)->group(function () {
+        Route::post('platforms', 'store');
+        Route::patch('platforms/{platform}', 'update');
+        Route::delete('platforms/{platform}', 'destroy');
+    });
+
+    Route::controller(GameController::class)->group(function () {
+        Route::post('games', 'store');
+        Route::patch('games/{game}', 'update');
+        Route::delete('games/{game}', 'destroy');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('users', 'index');
+        Route::get('users/{user}', 'show')->name('users.show');
+        Route::post('users', 'store');
+        Route::patch('users/{user}', 'update');
+        Route::delete('users/{user}', 'destroy');
+    });
+
+    Route::controller(CopyController::class)->group(function () {
+        Route::get('users/{user}/copies', 'indexUserCopies');
+        Route::post('users/{user}/copies', 'storeUserCopy');
+    });
 
 });
+
+    //Registered
+
+    Route::group(['middleware' => 'auth:api'], function(){
+        Route::apiResource('/copies', CopyController::class);
+});
+
