@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\StudioCollection;
+use App\Http\Resources\V1\StudioResource;
 use App\Models\Studio;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StudioController extends Controller
 {
@@ -15,7 +18,7 @@ class StudioController extends Controller
      */
     public function index()
     {
-        //
+        return new StudioCollection(Studio::all());
     }
 
     /**
@@ -26,8 +29,17 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $this->validate($request, [
+            'name' => ['required', 'max:50', 'unique:platforms']
+        ]);
+
+        $studio = Studio::create([
+            'name' => $request -> input('name'),
+        ]);
+
+        return (new StudioResource($studio))
+            ->response()
+            ->setStatusCode(201);    }
 
     /**
      * Display the specified resource.
@@ -37,7 +49,9 @@ class StudioController extends Controller
      */
     public function show(Studio $studio)
     {
-        //
+        return (new StudioResource($studio))
+            ->response()
+            ->setStatusCode((200));
     }
 
     /**
@@ -49,7 +63,18 @@ class StudioController extends Controller
      */
     public function update(Request $request, Studio $studio)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:50', Rule::unique('studios')->ignore($studio->name)],
+
+        ]);
+
+        $studio->update([
+            'name' => $request->input('name'),
+        ]);
+
+        return (new StudioResource($studio))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -60,6 +85,8 @@ class StudioController extends Controller
      */
     public function destroy(Studio $studio)
     {
-        //
+        $studio->delete();
+
+        return response()->json(null, 204);
     }
 }

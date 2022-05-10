@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\GenreCollection;
+use App\Http\Resources\V1\GenreResource;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+// use Illuminate\Validation\Rule;
 
 class GenreController extends Controller
 {
@@ -15,7 +20,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
+        return new GenreCollection(Genre::all());
     }
 
     /**
@@ -26,7 +31,17 @@ class GenreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:50', 'unique:genres']
+        ]);
+
+        $genre = Genre::create([
+            'name' => $request -> input('name'),
+        ]);
+
+        return (new GenreResource($genre))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -37,7 +52,9 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
+        return (new GenreResource($genre))
+            ->response()
+            ->setStatusCode((200));
     }
 
     /**
@@ -49,7 +66,18 @@ class GenreController extends Controller
      */
     public function update(Request $request, Genre $genre)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:50', Rule::unique('genres')->ignore($genre->name)],
+
+        ]);
+
+        $genre->update([
+            'name' => $request->input('name'),
+        ]);
+
+        return (new GenreResource($genre))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -60,6 +88,9 @@ class GenreController extends Controller
      */
     public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+
+        return response()->json(null, 204);
+
     }
 }

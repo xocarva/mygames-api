@@ -3,63 +3,74 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\UserCollection;
+use App\Http\Resources\V1\UserResource;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        return new UserCollection(User::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name'      => ['required', 'min:2', 'max:50'],
+            'email'     => ['required', 'email', 'max:255', 'unique:users'],
+            'password'  => ['required', 'min:8', 'max:12']
+        ]);
+
+        $user = User::create([
+            'name'      => $request -> input('name'),
+            'email'     => $request -> input('email'),
+            'password'  => $request ->input('password'),
+        ]);
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(User $user)
     {
-        //
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode((200));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, User $user)
     {
-        //
+        $this->validate($request, [
+            'name'      => ['min:2', 'max:50'],
+            'email'     => ['email', 'max:255', Rule::unique('users')->ignore($user->email)],
+            'password'  => ['min:8', 'max:12']
+        ]);
+
+        $user->update([
+            'name'      => $request->input('name') ?? $user->name,
+            'email'     => $request->input('email') ?? $user->email,
+            'password'  => $request->input('password') ?? $user->password,
+        ]);
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->json(null, 204);
+
     }
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\PlatformCollection;
+use App\Http\Resources\V1\PlatformResource;
 use App\Models\Platform;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PlatformController extends Controller
 {
@@ -15,7 +18,7 @@ class PlatformController extends Controller
      */
     public function index()
     {
-        //
+        return new PlatformCollection(Platform::all());
     }
 
     /**
@@ -26,7 +29,17 @@ class PlatformController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:50', 'unique:platforms']
+        ]);
+
+        $platform = Platform::create([
+            'name' => $request -> input('name'),
+        ]);
+
+        return (new PlatformResource($platform))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -37,7 +50,9 @@ class PlatformController extends Controller
      */
     public function show(Platform $platform)
     {
-        //
+        return (new PlatformResource($platform))
+            ->response()
+            ->setStatusCode((200));
     }
 
     /**
@@ -49,7 +64,18 @@ class PlatformController extends Controller
      */
     public function update(Request $request, Platform $platform)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'max:50', Rule::unique('platforms')->ignore($platform->name)],
+
+        ]);
+
+        $platform->update([
+            'name' => $request->input('name'),
+        ]);
+
+        return (new PlatformResource($platform))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -60,6 +86,8 @@ class PlatformController extends Controller
      */
     public function destroy(Platform $platform)
     {
-        //
+        $platform->delete();
+
+        return response()->json(null, 204);
     }
 }

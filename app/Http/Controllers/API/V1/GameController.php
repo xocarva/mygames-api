@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\GameCollection;
+use App\Http\Resources\V1\GameResource;
 use App\Models\Game;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,7 @@ class GameController extends Controller
      */
     public function index()
     {
-        //
+        return new GameCollection(Game::all());
     }
 
     /**
@@ -26,7 +28,21 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title'     => ['required', 'max:50'],
+            'genreId'   => ['required'],
+            'studioId'  => ['required'],
+        ]);
+
+        $game = Game::create([
+            'title'     => $request -> input('title'),
+            'genre_id'  => $request->input('genreId'),
+            'studio_id' => $request->input('studioId'),
+        ]);
+
+        return (new GameResource($game))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -37,7 +53,9 @@ class GameController extends Controller
      */
     public function show(Game $game)
     {
-        //
+        return (new GameResource($game))
+            ->response()
+            ->setStatusCode((200));
     }
 
     /**
@@ -49,7 +67,21 @@ class GameController extends Controller
      */
     public function update(Request $request, Game $game)
     {
-        //
+        $this->validate($request, [
+            'title'     => ['string','max:50'],
+            'genreId'   => ['integer'],
+            'studioId'  => ['integer'],
+        ]);
+
+        $game->update([
+            'title'     => $request->input('title') ?? $game->title,
+            'genre_id'  => $request->input('genreId') ?? $game->genre_id,
+            'studio_id' => $request->input('studioId') ?? $game->studio_id,
+        ]);
+
+        return (new GameResource($game))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -60,6 +92,8 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
-        //
+        $game->delete();
+
+        return response()->json(null, 204);
     }
 }
