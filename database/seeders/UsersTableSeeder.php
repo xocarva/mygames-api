@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        $user->createToken('JohnDoe')->plainTextToken;
+        // $user->createToken('JohnDoe')->plainTextToken;
 
         User::factory()->count(5)->create();
     }
