@@ -30,7 +30,7 @@ class StudioController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'max:50', 'unique:platforms']
+            'name' => ['string', 'required', 'max:50', 'unique:studios']
         ]);
 
         $studio = Studio::create([
@@ -64,7 +64,7 @@ class StudioController extends Controller
     public function update(Request $request, Studio $studio)
     {
         $this->validate($request, [
-            'name' => ['required', 'max:50', Rule::unique('studios')->ignore($studio->name)],
+            'name' => ['string', 'required', 'max:50', Rule::unique('studios')->ignore($studio->name)],
 
         ]);
 

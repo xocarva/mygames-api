@@ -32,7 +32,7 @@ class GenreController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'max:50', 'unique:genres']
+            'name' => ['string', 'required', 'max:50', 'unique:genres']
         ]);
 
         $genre = Genre::create([

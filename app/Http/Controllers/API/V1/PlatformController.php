@@ -30,7 +30,7 @@ class PlatformController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'max:50', 'unique:platforms']
+            'name' => ['string', 'required', 'max:50', 'unique:platforms']
         ]);
 
         $platform = Platform::create([
@@ -65,7 +65,7 @@ class PlatformController extends Controller
     public function update(Request $request, Platform $platform)
     {
         $this->validate($request, [
-            'name' => ['required', 'max:50', Rule::unique('platforms')->ignore($platform->name)],
+            'name' => ['string', 'required', 'max:50', Rule::unique('platforms')->ignore($platform->name)],
 
         ]);
 

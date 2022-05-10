@@ -29,9 +29,9 @@ class GameController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title'     => ['required', 'max:50'],
-            'genreId'   => ['required'],
-            'studioId'  => ['required'],
+            'title'     => ['integer', 'required', 'max:50'],
+            'genreId'   => ['integer', 'required'],
+            'studioId'  => ['integer', 'required'],
         ]);
 
         $game = Game::create([
