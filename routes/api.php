@@ -29,7 +29,7 @@ Route::controller(AuthController::class)->group(function () {
 
 });
 
-Route::group([], function(){
+Route::group(['middleware' => 'auth:api'], function(){
 
     // Genres
     Route::apiResource('/genres', GenreController::class);

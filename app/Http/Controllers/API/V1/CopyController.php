@@ -15,9 +15,12 @@ class CopyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        return new CopyCollection(Copy::all());
+        $userId = auth()->user()->id;
+
+        return new CopyCollection(Copy::all()->where('user_id', '=', $userId));
     }
 
     /**
