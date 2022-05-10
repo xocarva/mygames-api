@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasGame;
+use App\Traits\HasOwner;
+use App\Traits\HasPlatform;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Copy extends Model
 {
-    use HasFactory;
+    use HasFactory, HasOwner, HasGame, HasPlatform;
 
     const TABLE = 'copies';
 
