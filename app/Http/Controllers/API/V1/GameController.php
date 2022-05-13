@@ -17,7 +17,7 @@ class GameController extends Controller
      */
     public function index()
     {
-        return new GameCollection(Game::all());
+        return new GameCollection(Game::paginate(10));
     }
 
     /**

@@ -21,7 +21,7 @@ class CopyController extends Controller
     {
         $userId = auth()->user()->id;
 
-        return new CopyCollection(Copy::all()->where('user_id', '=', $userId));
+        return new CopyCollection(Copy::paginate(10)->where('user_id', '=', $userId));
     }
 
 
@@ -156,7 +156,7 @@ class CopyController extends Controller
 
     public function indexUserCopies(User $user)
     {
-        return new CopyCollection(Copy::all()->where('user_id', '=', $user->id));
+        return new CopyCollection(Copy::paginate(10)->where('user_id', '=', $user->id));
     }
 
     public function storeUserCopy(Request $request, User $user)
