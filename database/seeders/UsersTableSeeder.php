@@ -19,7 +19,8 @@ class UsersTableSeeder extends Seeder
         $user = User::create([
             'name'     => 'John Doe',
             'email'    => 'john@example.com',
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
+            'admin'    => true,
         ]);
 
         // $user->createToken('JohnDoe')->plainTextToken;

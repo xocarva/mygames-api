@@ -57,7 +57,7 @@ Route::controller(GameController::class)->group(function () {
 
 // Admin
 
-Route::group([], function(){
+Route::group(['middleware' => 'auth:api', 'middleware' => 'isAdmin'], function(){
 
     Route::controller(GenreController::class)->group(function () {
         Route::post('genres', 'store');
@@ -101,6 +101,7 @@ Route::group([], function(){
     //Registered
 
     Route::group(['middleware' => 'auth:api'], function(){
+
         Route::apiResource('/copies', CopyController::class);
 });
 
