@@ -17,11 +17,36 @@ class CopyController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
         $userId = auth()->user()->id;
+        $genre = $request->genre;
+        $platform = $request->platform;
+        $game = $request->game;
+        $studio = $request->studio;
+        $perPage = $request->pagination;
 
-        return new CopyCollection(Copy::paginate(10)->where('user_id', '=', $userId));
+        $copies = Copy::join('games', 'copies.game_id', 'games.id')
+                    ->join('genres', 'games.genre_id', 'genres.id')
+                    ->join('platforms', 'copies.platform_id', 'platforms.id')
+                    ->select('copies.*')
+                    ->when($genre, function($query, $genre){
+                        $query->where('genres.name', $genre);
+                    })
+                    ->when($platform, function($query, $platform){
+                        $query->where('platforms.name', $platform);
+                    })
+                    ->when($game, function($query, $game){
+                        $query->where('platforms.name', $game);
+                    })
+                    ->when($studio, function($query, $studio){
+                        $query->where('platforms.name', $studio);
+                    })
+                    ->where('copies.user_id', $userId)
+                    ->paginate($perPage ?? 10)
+        ;
+
+        return new CopyCollection($copies);
     }
 
 
@@ -154,9 +179,35 @@ class CopyController extends Controller
 
 
 
-    public function indexUserCopies(User $user)
+    public function indexUserCopies(Request $request, User $user)
     {
-        return new CopyCollection(Copy::paginate(10)->where('user_id', '=', $user->id));
+        $genre = $request->genre;
+        $platform = $request->platform;
+        $game = $request->game;
+        $studio = $request->studio;
+        $perPage = $request->pagination;
+
+        $copies = Copy::join('games', 'copies.game_id', 'games.id')
+                    ->join('genres', 'games.genre_id', 'genres.id')
+                    ->join('platforms', 'copies.platform_id', 'platforms.id')
+                    ->select('copies.*')
+                    ->when($genre, function($query, $genre){
+                        $query->where('genres.name', $genre);
+                    })
+                    ->when($platform, function($query, $platform){
+                        $query->where('platforms.name', $platform);
+                    })
+                    ->when($game, function($query, $game){
+                        $query->where('platforms.name', $game);
+                    })
+                    ->when($studio, function($query, $studio){
+                        $query->where('platforms.name', $studio);
+                    })
+                    ->where('user_id', '=', $user->id)
+                    ->paginate($perPage ?? 10)
+        ;
+
+        return new CopyCollection($copies);
     }
 
     public function storeUserCopy(Request $request, User $user)

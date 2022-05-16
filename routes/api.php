@@ -100,8 +100,7 @@ Route::group(['middleware' => 'auth:api', 'middleware' => 'isAdmin'], function()
 
     //Registered
 
-    Route::group(['middleware' => 'auth:api'], function(){
-
-        Route::apiResource('/copies', CopyController::class);
+Route::group(['middleware' => 'auth:api'], function(){
+    Route::apiResource('/copies', CopyController::class);
 });
 
