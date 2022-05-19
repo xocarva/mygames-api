@@ -20,6 +20,7 @@ class GameResource extends JsonResource
             'type'  => 'games',
             'id'    => $this->id,
             'attributes'    => [
+                'title'     => $this->title,
                 'genreId'   => $this->genre_id,
                 'studioId'  => $this->studio_id,
                 'createdAt' => $this->created_at,
