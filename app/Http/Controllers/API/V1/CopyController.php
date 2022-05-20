@@ -20,30 +20,30 @@ class CopyController extends Controller
     public function index(Request $request)
     {
         $userId = auth()->user()->id;
+        $title = $request->title;
         $genre = $request->genre;
         $platform = $request->platform;
-        $game = $request->game;
         $studio = $request->studio;
-        $perPage = $request->pagination;
 
         $copies = Copy::join('games', 'copies.game_id', 'games.id')
                     ->join('genres', 'games.genre_id', 'genres.id')
+                    ->join('studios', 'games.studio_id', 'studios.id')
                     ->join('platforms', 'copies.platform_id', 'platforms.id')
                     ->select('copies.*')
+                    ->when($title, function($query, $title){
+                        $query->where('games.title', $title);
+                    })
                     ->when($genre, function($query, $genre){
                         $query->where('genres.name', $genre);
                     })
                     ->when($platform, function($query, $platform){
                         $query->where('platforms.name', $platform);
                     })
-                    ->when($game, function($query, $game){
-                        $query->where('platforms.name', $game);
-                    })
                     ->when($studio, function($query, $studio){
-                        $query->where('platforms.name', $studio);
+                        $query->where('studios.name', $studio);
                     })
                     ->where('copies.user_id', $userId)
-                    ->paginate($perPage ?? 10)
+                    ->get();
         ;
 
         return new CopyCollection($copies);
