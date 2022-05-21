@@ -8,6 +8,7 @@ use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -57,7 +58,7 @@ class UserController extends Controller
         $user->update([
             'name'      => $request->input('name') ?? $user->name,
             'email'     => $request->input('email') ?? $user->email,
-            'password'  => $request->input('password') ?? $user->password,
+            'password'  => Hash::make($request->password) ?? $user->password,
         ]);
 
         return (new UserResource($user))
