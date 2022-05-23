@@ -31,16 +31,16 @@ class CopyController extends Controller
                     ->join('platforms', 'copies.platform_id', 'platforms.id')
                     ->select('copies.*')
                     ->when($title, function($query, $title){
-                        $query->where('games.title', $title);
+                        $query->where('games.title', 'LIKE', "%{$title}%" );
                     })
                     ->when($genre, function($query, $genre){
-                        $query->where('genres.name', $genre);
+                        $query->where('genres.name', 'LIKE', "%{$genre}%");
                     })
                     ->when($platform, function($query, $platform){
-                        $query->where('platforms.name', $platform);
+                        $query->where('platforms.name', 'LIKE',  "%{$platform}%");
                     })
                     ->when($studio, function($query, $studio){
-                        $query->where('studios.name', $studio);
+                        $query->where('studios.name', 'LIKE', "%{$studio}%");
                     })
                     ->where('copies.user_id', $userId)
                     ->get();
