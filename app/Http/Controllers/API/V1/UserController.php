@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name'      => ['string', 'required', 'min:2', 'max:50'],
-            'email'     => ['email', 'required', 'max:255', 'unique:users'],
+            'email'     => ['email', 'required', 'max:50', 'unique:users'],
             'password'  => ['string', 'required', 'min:8', 'max:12']
         ]);
 
@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name'      => ['string', 'min:2', 'max:50'],
-            'email'     => ['email', 'max:255', Rule::unique('users')->ignore($user->email)],
+            'email'     => ['email', 'max:50', Rule::unique('users')->ignore($user->email)],
             'password'  => ['string', 'min:8', 'max:12'],
             'admin'     => ['boolean'],
 

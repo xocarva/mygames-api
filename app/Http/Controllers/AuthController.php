@@ -17,8 +17,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+            'email' => 'required|string|email|min:2|max:50',
+            'password' => 'required|string|min:8|max:12',
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -46,9 +46,9 @@ class AuthController extends Controller
 
     public function register(Request $request){
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'name' => 'required|string|min:2|max:50',
+            'email' => 'required|string|email|max:50|unique:users',
+            'password' => 'required|string|min:8|max:12',
         ]);
 
         $user = User::create([
@@ -89,5 +89,4 @@ class AuthController extends Controller
             ]
         ]);
     }
-
 }
