@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
             if( $request->is('api/*')) {
                 return response()->json([
                     'error' => [
-                        'message'       => 'Resource tot found',
+                        'message'       => 'Resource not found',
                         'type'          => 'NotFoundHttpException',
                         'statusCode'   => (string)$e->getStatusCode(),
                     ],
