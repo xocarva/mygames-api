@@ -30,7 +30,7 @@ class UserController extends Controller
         $user = User::create([
             'name'      => $request -> input('name'),
             'email'     => $request -> input('email'),
-            'password'  => $request ->input('password'),
+            'password' => Hash::make($request->password),
         ]);
 
         return (new UserResource($user))
@@ -76,5 +76,40 @@ class UserController extends Controller
 
         return response()->json(null, 204);
 
+    }
+
+
+    public function showProfile()
+    {
+        $user = new UserResource(auth()->user());
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode((200));
+    }
+
+
+    public function updateProfile(Request $request)
+    {
+        $user = new UserResource(auth()->user());
+
+        $this->validate($request, [
+            'name'      => ['string', 'min:2', 'max:50'],
+            'email'     => ['email', 'max:50', Rule::unique('users')->ignore($user->email)],
+            'password'  => ['string', 'min:8', 'max:12'],
+            'admin'     => ['boolean'],
+
+        ]);
+
+        $user->update([
+            'name'      => $request->input('name') ?? $user->name,
+            'email'     => $request->input('email') ?? $user->email,
+            'password'  => Hash::make($request->password) ?? $user->password,
+            'admin'   => $request->input('admin') ?? $user->admin,
+        ]);
+
+        return (new UserResource($user))
+            ->response()
+            ->setStatusCode(200);
     }
 }

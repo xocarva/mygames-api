@@ -102,5 +102,9 @@ Route::group(['middleware' => 'auth:api', 'middleware' => 'isAdmin'], function()
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::apiResource('/copies', CopyController::class);
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/profile', 'showProfile');
+        Route::patch('/profile', 'updateProfile');
+    });
 });
 
