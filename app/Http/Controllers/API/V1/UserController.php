@@ -60,7 +60,7 @@ class UserController extends Controller
         $user->update([
             'name'      => $request->input('name') ?? $user->name,
             'email'     => $request->input('email') ?? $user->email,
-            'password'  => Hash::make($request->password) ?? $user->password,
+            'password'  => $request->password ? Hash::make($request->password) : $user->password,
             'admin'   => $request->input('admin') ?? $user->admin,
         ]);
 
@@ -93,18 +93,18 @@ class UserController extends Controller
     {
         $user = new UserResource(auth()->user());
 
+
         $this->validate($request, [
             'name'      => ['string', 'min:2', 'max:50'],
             'email'     => ['email', 'max:50', Rule::unique('users')->ignore($user->email)],
             'password'  => ['string', 'min:8', 'max:12'],
             'admin'     => ['boolean'],
-
         ]);
 
         $user->update([
             'name'      => $request->input('name') ?? $user->name,
             'email'     => $request->input('email') ?? $user->email,
-            'password'  => Hash::make($request->password) ?? $user->password,
+            'password'  => $request->password ? Hash::make($request->password) : $user->password,
             'admin'   => $request->input('admin') ?? $user->admin,
         ]);
 
