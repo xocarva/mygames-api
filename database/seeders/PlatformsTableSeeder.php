@@ -15,6 +15,6 @@ class PlatformsTableSeeder extends Seeder
      */
     public function run()
     {
-        Platform::factory()->count(4)->create();
+        Platform::factory()->count(3)->create();
     }
 }

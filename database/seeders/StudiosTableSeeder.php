@@ -15,6 +15,6 @@ class StudiosTableSeeder extends Seeder
      */
     public function run()
     {
-        Studio::factory()->count(8)->create();
+        Studio::factory()->count(4)->create();
     }
 }

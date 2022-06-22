@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
             $table->foreignId('studio_id')->constrained('studios')->onDelete('cascade');
+            $table->unique(['title', 'genre_id', 'studio_id']);
             $table->timestamps();
         });
     }

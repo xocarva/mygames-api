@@ -17,7 +17,7 @@ class StudioFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->sentence(2),
+            'name' => $this->faker->unique()->sentence(2),
         ];
     }
 }

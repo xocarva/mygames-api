@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('game_id')->constrained('games')->onDelete('cascade');
             $table->foreignId('platform_id')->constrained('platforms')->onDelete('cascade');
+            $table->unique(['user_id', 'game_id', 'platform_id']);
             $table->timestamps();
         });
     }

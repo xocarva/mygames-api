@@ -15,7 +15,7 @@ class CopiesTableSeeder extends Seeder
      */
     public function run()
     {
-        Copy::factory()->count(5)->create(['user_id' => 1, 'platform_id' => 1]);
+        Copy::factory()->count(2)->create(['user_id' => 1, 'platform_id' => 1]);
         Copy::factory()->count(2)->create(['user_id' => 1, 'platform_id' => 2]);
         Copy::factory()->count(2)->create(['user_id' => 2, 'platform_id' => 3]);
         Copy::factory()->count(4)->create(['user_id' => 2, 'platform_id' => 1]);
