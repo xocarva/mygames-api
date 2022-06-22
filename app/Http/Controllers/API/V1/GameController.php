@@ -29,10 +29,24 @@ class GameController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title'     => ['integer', 'required', 'max:50'],
+            'title'     => ['string', 'required', 'max:50'],
             'genreId'   => ['integer', 'required'],
             'studioId'  => ['integer', 'required'],
         ]);
+
+        $games = Game::select('games.*')
+            ->where('title', $request->title)
+            ->where('genre_id', $request->genreId)
+            ->where('studio_id', $request->studioId)
+            ->get();
+
+        if(count($games) > 0) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Game already exists',
+                ],
+            ],422);
+        }
 
         $game = Game::create([
             'title'     => $request -> input('title'),
@@ -72,6 +86,20 @@ class GameController extends Controller
             'genreId'   => ['integer'],
             'studioId'  => ['integer'],
         ]);
+
+        $games = Game::select('games.*')
+            ->where('title', $request->title)
+            ->where('genre_id', $request->genreId)
+            ->where('studio_id', $request->studioId)
+            ->get();
+
+        if(count($games) > 0) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Game already exists',
+                ],
+            ],422);
+        }
 
         $game->update([
             'title'     => $request->input('title') ?? $game->title,

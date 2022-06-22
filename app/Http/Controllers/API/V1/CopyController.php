@@ -8,6 +8,7 @@ use App\Http\Resources\V1\CopyResource;
 use App\Models\Copy;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CopyController extends Controller
 {
@@ -63,10 +64,24 @@ class CopyController extends Controller
             'platformId'    => ['integer','required'],
             'rating'        => ['integer', 'min:1', 'max:5'],
             'completed'     => ['boolean'],
-
         ]);
 
         $userId = auth()->user()->id;
+
+
+        $copies = Copy::select('copies.*')
+                    ->where('user_id', $userId)
+                    ->where('platform_id', $request->platformId)
+                    ->where('game_id', $request->gameId)
+                    ->get();
+
+        if(count($copies) > 0) {
+            return response()->json([
+                'error' => [
+                    'message'       => 'Copy already registered',
+                ],
+            ],422);
+        }
 
         $copy = Copy::create([
             'user_id'       => $userId,
@@ -137,6 +152,20 @@ class CopyController extends Controller
             'rating'        => ['integer', 'min:1', 'max:5'],
             'completed'     => ['boolean']
         ]);
+
+        $copies = Copy::select('copies.*')
+                    ->where('user_id', $userId)
+                    ->where('platform_id', $request->platformId)
+                    ->where('game_id', $request->gameId)
+                    ->get();
+
+        if(count($copies) > 0) {
+            return response()->json([
+                'error' => [
+                    'message'       => 'Copy already registered',
+                ],
+            ],422);
+        }
 
         $copy->update([
             'game_id'       => $request->input('gameId') ?? $copy->game_id,
