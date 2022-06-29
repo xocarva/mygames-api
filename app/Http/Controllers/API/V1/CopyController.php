@@ -78,9 +78,9 @@ class CopyController extends Controller
         if(count($copies) > 0) {
             return response()->json([
                 'error' => [
-                    'message'       => 'Copy already registered',
+                    'message'   => 'Copy already registered',
                 ],
-            ],422);
+            ],512);
         }
 
         $copy = Copy::create([
@@ -162,9 +162,9 @@ class CopyController extends Controller
         if(count($copies) > 0) {
             return response()->json([
                 'error' => [
-                    'message'       => 'Copy already registered',
+                    'message'   => 'Copy already registered',
                 ],
-            ],422);
+            ],512);
         }
 
         $copy->update([

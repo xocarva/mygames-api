@@ -64,7 +64,7 @@ class GameController extends Controller
                 'error' => [
                     'message' => 'Game already exists',
                 ],
-            ],422);
+            ],512);
         }
 
         $game = Game::create([
