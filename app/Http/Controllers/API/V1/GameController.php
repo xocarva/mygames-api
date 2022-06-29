@@ -15,9 +15,28 @@ class GameController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new GameCollection(Game::paginate(10));
+        $title = $request->title;
+        $genre = $request->genre;
+        $studio = $request->studio;
+
+        $games = Game::join('genres', 'games.genre_id', 'genres.id')
+                    ->join('studios', 'games.studio_id', 'studios.id')
+                    ->select('games.*')
+                    ->when($title, function($query, $title){
+                        $query->where('games.title', 'LIKE', "%{$title}%" );
+                    })
+                    ->when($genre, function($query, $genre){
+                        $query->where('genres.name', 'LIKE', "%{$genre}%");
+                    })
+                    ->when($studio, function($query, $studio){
+                        $query->where('studios.name', 'LIKE', "%{$studio}%");
+                    })
+                    ->get();
+        ;
+
+        return new GameCollection($games);
     }
 
     /**
@@ -97,8 +116,9 @@ class GameController extends Controller
             return response()->json([
                 'error' => [
                     'message' => 'Game already exists',
+                    'games' => $games,
                 ],
-            ],422);
+            ],512);
         }
 
         $game->update([
